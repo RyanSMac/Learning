@@ -1,9 +1,2 @@
-
-import Faction
-
-
-
-
-
-faction1 = Faction.Faction("Rebels")
-print(faction1.name)
+# Set up
+print("Welcome to Star Wars Legion")
