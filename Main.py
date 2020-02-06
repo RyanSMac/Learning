@@ -1,11 +1,9 @@
-import random
+
+import Faction
 
 
-def roll(x):
-    return random.randrange(x)
 
-WIDTH = 1280
-HEIGHT = 720
 
-def draw():
-    screen.fill((238, 112, 112))
+
+faction1 = Faction.Faction("Rebels")
+print(faction1.name)
