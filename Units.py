@@ -3,7 +3,8 @@ from pgzero.builtins import Actor
 
 
 class Unit:
-    def __init__(self, name, hp, weapons, movement_value, quantity, def_colour, value, state):
+    def __init__(self, name, hp, weapons, movement_value, quantity, def_colour, value, state, action_value,
+                 action_taken):
         self.name = name
         self.hp = hp
         self.weapons = weapons
@@ -12,13 +13,15 @@ class Unit:
         self.def_colour = def_colour
         self.value = value
         self.state = state
+        self.action_value = action_value
+        self.action_taken = action_taken
 
 
-stormtrooper = Unit("Stormtrooper", 1, 1, 2, 5, 0, 50, 0)
-vader = Unit("Vader", 5, 0, 1, 1, 2, 50, 0)
+stormtrooper = Unit("Stormtrooper", 1, 1, 2, 5, 0, 50, 0, 2, 0)
+vader = Unit("Vader", 5, 0, 1, 1, 2, 50, 0, 2, 0)
 
-rebel_trooper = Unit("Rebel Squad", 1, 1, 2, 5, 0, 50, 0)
-luke_skywalker = Unit("Luke Skywalker", 5, 0, 2, 1, 2, 50, 0)
+rebel_trooper = Unit("Rebel Squad", 1, 1, 2, 5, 0, 50, 0, 2, 0)
+luke_skywalker = Unit("Luke Skywalker", 5, 0, 2, 1, 2, 50, 0, 2, 0)
 
 
 def set_up_rebel():
