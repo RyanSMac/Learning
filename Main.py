@@ -207,6 +207,8 @@ def on_mouse_down(pos):
 WIDTH = 720
 HEIGHT = 720
 
+TITLE = "Star Wars Legion Lite"
+
 board_x = 10
 board_y = 10
 
@@ -220,16 +222,16 @@ player2 = Units.set_up_imperial()
 
 player1[0][0].pos = board[2][0].pos
 board_occupied[2][0] = 1
-player1[1][0].pos = board[4][0].pos
+player1[1][0].pos = board[7][0].pos
 board_occupied[4][0] = 1
-player1[2][0].pos = board[7][0].pos
+player1[2][0].pos = board[4][0].pos
 board_occupied[7][0] = 1
 
 player2[0][0].pos = board[2][9].pos
 board_occupied[2][9] = 1
-player2[1][0].pos = board[4][9].pos
+player2[1][0].pos = board[7][9].pos
 board_occupied[4][9] = 1
-player2[2][0].pos = board[7][9].pos
+player2[2][0].pos = board[5][9].pos
 board_occupied[7][9] = 1
 
 
