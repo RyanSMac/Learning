@@ -4,7 +4,7 @@ from pgzero.builtins import Actor
 
 class Unit:
     def __init__(self, name, hp, weapons, movement_value, quantity, def_colour, value, state, action_value,
-                 action_taken):
+                 action_taken, locked):
         self.name = name
         self.hp = hp
         self.weapons = weapons
@@ -15,23 +15,26 @@ class Unit:
         self.state = state
         self.action_value = action_value
         self.action_taken = action_taken
+        self.locked = locked
 
 
-stormtrooper = Unit("Stormtrooper", 1, 1, 2, 5, 0, 50, 0, 2, 0)
-vader = Unit("Vader", 5, 0, 1, 1, 2, 50, 0, 2, 0)
+stormtrooper1 = Unit("Stormtrooper", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
+stormtrooper2 = Unit("Stormtrooper", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
+vader = Unit("Vader", 5, 0, 1, 1, 2, 50, 0, 2, 2, False)
 
-rebel_trooper = Unit("Rebel Squad", 1, 1, 2, 5, 0, 50, 0, 2, 0)
-luke_skywalker = Unit("Luke Skywalker", 5, 0, 2, 1, 2, 50, 0, 2, 0)
+rebel_trooper1 = Unit("Rebel Squad", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
+rebel_trooper2 = Unit("Rebel Squad", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
+luke_skywalker = Unit("Luke Skywalker", 5, 0, 2, 1, 2, 50, 0, 2, 2, False)
 
 
 def set_up_rebel():
     rebels = [[0] * 2 for i in range(3)]
 
     rebels[0][0] = Actor('rebels')
-    rebels[0][1] = rebel_trooper
+    rebels[0][1] = rebel_trooper1
 
     rebels[1][0] = Actor('rebels')
-    rebels[1][1] = rebel_trooper
+    rebels[1][1] = rebel_trooper2
 
     rebels[2][0] = Actor('luke')
     rebels[2][1] = luke_skywalker
@@ -43,10 +46,10 @@ def set_up_imperial():
     imperial = [[0] * 2 for i in range(3)]
 
     imperial[0][0] = Actor('stormtrooper')
-    imperial[0][1] = stormtrooper
+    imperial[0][1] = stormtrooper1
 
     imperial[1][0] = Actor('stormtrooper')
-    imperial[1][1] = stormtrooper
+    imperial[1][1] = stormtrooper2
 
     imperial[2][0] = Actor('vader')
     imperial[2][1] = vader

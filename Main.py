@@ -22,43 +22,84 @@ def start_movement(player, pos):
     global actor_pos
     global last_move_x
     global last_move_y
+    lock_state = False
 
     for each in player:
-        if each[0].collidepoint(pos):
+        if each[1].locked is True and each[1].action_taken != 0:
+            lock_state = True
+            if each[0].collidepoint(pos):
 
-            if each[1].action_taken < each[1].action_value:
-                for x in range(board_x):
-                    for y in range(board_y):
-                        # storing actor position
-                        actor_pos = each[0].pos
+                if each[1].action_value >= each[1].action_taken > 0:
+                    for x in range(board_x):
+                        for y in range(board_y):
+                            # storing actor position
+                            actor_pos = each[0].pos
 
-                        if each[0].collidepoint(board[x][y].pos):
-                            for rang in range(1, each[1].movement_value + 1):
-                                last_move_x = x
-                                last_move_y = y
-                                print(x, y)
+                            if each[0].collidepoint(board[x][y].pos):
+                                for rang in range(1, each[1].movement_value + 1):
+                                    last_move_x = x
+                                    last_move_y = y
+                                    print(x, y)
 
-                                move_scan(x, y, rang, 0)
-                                move_scan(x, y, -rang, 0)
-                                move_scan(x, y, 0, rang)
-                                move_scan(x, y, 0, -rang)
-                                move_scan(x, y, rang, rang)
-                                move_scan(x, y, rang, -rang)
-                                move_scan(x, y, -rang, rang)
-                                move_scan(x, y, -rang, -rang)
+                                    move_scan(x, y, rang, 0)
+                                    move_scan(x, y, -rang, 0)
+                                    move_scan(x, y, 0, rang)
+                                    move_scan(x, y, 0, -rang)
+                                    move_scan(x, y, rang, rang)
+                                    move_scan(x, y, rang, -rang)
+                                    move_scan(x, y, -rang, rang)
+                                    move_scan(x, y, -rang, -rang)
 
-                                move_scan(x, y, rang, 1)
-                                move_scan(x, y, -rang, 1)
-                                move_scan(x, y, rang, -1)
-                                move_scan(x, y, -rang, -1)
+                                    move_scan(x, y, rang, 1)
+                                    move_scan(x, y, -rang, 1)
+                                    move_scan(x, y, rang, -1)
+                                    move_scan(x, y, -rang, -1)
 
-                                move_scan(x, y, 1, rang)
-                                move_scan(x, y, 1, -rang)
-                                move_scan(x, y, -1, rang)
-                                move_scan(x, y, -1, -rang)
+                                    move_scan(x, y, 1, rang)
+                                    move_scan(x, y, 1, -rang)
+                                    move_scan(x, y, -1, rang)
+                                    move_scan(x, y, -1, -rang)
+
+    if lock_state is False:
+        for each in player:
+            if each[0].collidepoint(pos):
+
+                if each[1].action_value >= each[1].action_taken > 0:
+                    for x in range(board_x):
+                        for y in range(board_y):
+                            # storing actor position
+                            actor_pos = each[0].pos
+
+                            if each[0].collidepoint(board[x][y].pos):
+                                for rang in range(1, each[1].movement_value + 1):
+                                    last_move_x = x
+                                    last_move_y = y
+                                    print(x, y)
+
+                                    move_scan(x, y, rang, 0)
+                                    move_scan(x, y, -rang, 0)
+                                    move_scan(x, y, 0, rang)
+                                    move_scan(x, y, 0, -rang)
+                                    move_scan(x, y, rang, rang)
+                                    move_scan(x, y, rang, -rang)
+                                    move_scan(x, y, -rang, rang)
+                                    move_scan(x, y, -rang, -rang)
+
+                                    move_scan(x, y, rang, 1)
+                                    move_scan(x, y, -rang, 1)
+                                    move_scan(x, y, rang, -1)
+                                    move_scan(x, y, -rang, -1)
+
+                                    move_scan(x, y, 1, rang)
+                                    move_scan(x, y, 1, -rang)
+                                    move_scan(x, y, -1, rang)
+                                    move_scan(x, y, -1, -rang)
 
 
 def end_movement(player, pos):
+    global game_state
+    swap_turn = False
+
     for item in active_tile:
         if item.collidepoint(pos):
             for token in player:
@@ -69,12 +110,47 @@ def end_movement(player, pos):
                         for y in range(board_y):
                             if item.collidepoint(board[x][y].pos):
                                 board_occupied[x][y] = 1
+                    token[1].locked = True
+                    token[1].action_taken -= 1
+                    if token[1].action_taken == 0:
+                        swap_turn = True
+                        token[1].locked = False
 
     for item in active_tile:
         for x in range(board_x):
             for y in range(board_y):
                 if item.collidepoint(board[x][y].pos):
                     un_move_scan(item.pos, x, y)
+
+    if swap_turn is True:
+        if game_state == 2:
+            game_state = 3
+        elif game_state == 3:
+            game_state = 2
+
+    reset = True
+    for each in player1:
+        if each[1].action_taken > 0:
+            reset = False
+    for each in player2:
+        if each[1].action_taken > 0:
+            reset = False
+
+    if reset is True:
+        for each in player1:
+            each[1].action_taken = each[1].action_value
+            each[1].locked = False
+        for each in player2:
+            each[1].action_taken = each[1].action_value
+            each[1].locked = False
+
+    print(str(player1[0][1].name) + "1" + "Moves Remaining: " + str(player1[0][1].action_taken) + "/" + str(player1[0][1].action_value))
+    print(str(player1[1][1].name) + "2" + "Moves Remaining: " + str(player1[1][1].action_taken) + "/" + str(player1[1][1].action_value))
+    print(str(player1[2][1].name) + "1" + "Moves Remaining: " + str(player1[2][1].action_taken) + "/" + str(player1[2][1].action_value))
+
+    print(str(player2[0][1].name) + "1" + "Moves Remaining: " + str(player2[0][1].action_taken) + "/" + str(player2[0][1].action_value))
+    print(str(player2[1][1].name) + "2" + "Moves Remaining: " + str(player2[1][1].action_taken) + "/" + str(player2[1][1].action_value))
+    print(str(player2[2][1].name) + "1" + "Moves Remaining: " + str(player2[2][1].action_taken) + "/" + str(player2[2][1].action_value))
 
 
 # Function to check range of movement and if there are any collisions
@@ -112,6 +188,8 @@ def on_mouse_down(pos):
     global last_move_x
     global last_move_y
     global active_tile
+    global move_state
+
     if move_state is False:
         if game_state == 2:
             start_movement(player1, pos)
@@ -126,7 +204,7 @@ def on_mouse_down(pos):
         active_tile = []
 
 
-WIDTH = 1280
+WIDTH = 720
 HEIGHT = 720
 
 board_x = 10
