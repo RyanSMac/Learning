@@ -1,9 +1,12 @@
+# Import required modules
 import pgzrun, pygame, pgzero
 from pgzero.builtins import *
 
+# Import from python files
 import Board
 import Units
 
+# Game states and global variables
 # 0 menu, 1 game over, 2 player1, 3 player2
 game_state = 2
 move_state = False
@@ -15,14 +18,77 @@ last_move_y = 0
 active_tile = []
 
 
-def move_scan(x, y, rang_x, rang_y, board_occupied):
+def start_movement(player, pos):
+    global actor_pos
+    global last_move_x
+    global last_move_y
+
+    for each in player:
+        if each[0].collidepoint(pos):
+
+            if each[1].action_taken < each[1].action_value:
+                for x in range(board_x):
+                    for y in range(board_y):
+                        # storing actor position
+                        actor_pos = each[0].pos
+
+                        if each[0].collidepoint(board[x][y].pos):
+                            for rang in range(1, each[1].movement_value + 1):
+                                last_move_x = x
+                                last_move_y = y
+                                print(x, y)
+
+                                move_scan(x, y, rang, 0)
+                                move_scan(x, y, -rang, 0)
+                                move_scan(x, y, 0, rang)
+                                move_scan(x, y, 0, -rang)
+                                move_scan(x, y, rang, rang)
+                                move_scan(x, y, rang, -rang)
+                                move_scan(x, y, -rang, rang)
+                                move_scan(x, y, -rang, -rang)
+
+                                move_scan(x, y, rang, 1)
+                                move_scan(x, y, -rang, 1)
+                                move_scan(x, y, rang, -1)
+                                move_scan(x, y, -rang, -1)
+
+                                move_scan(x, y, 1, rang)
+                                move_scan(x, y, 1, -rang)
+                                move_scan(x, y, -1, rang)
+                                move_scan(x, y, -1, -rang)
+
+
+def end_movement(player, pos):
+    for item in active_tile:
+        if item.collidepoint(pos):
+            for token in player:
+                if token[0].pos == actor_pos:
+                    board_occupied[last_move_x][last_move_y] = 0
+                    token[0].pos = item.pos
+                    for x in range(board_x):
+                        for y in range(board_y):
+                            if item.collidepoint(board[x][y].pos):
+                                board_occupied[x][y] = 1
+
+    for item in active_tile:
+        for x in range(board_x):
+            for y in range(board_y):
+                if item.collidepoint(board[x][y].pos):
+                    un_move_scan(item.pos, x, y)
+
+
+# Function to check range of movement and if there are any collisions
+def move_scan(x, y, rang_x, rang_y):
+    global board_occupied
     global move_state
     move_state = True
     try:
         # Check if tile is occupied first
         if board_occupied[x + rang_x][y + rang_y] == 0:
+            # Added select tile to list if tile is empty
             active_tile.append(board[x + rang_x][y + rang_y])
-            # print(active_tile[-1])
+            # print(active_tile[-1]) Debug
+
             active_tile[-1] = Actor('move_square')
             active_tile[-1].pos = (((x + rang_x) * 68) + 54, ((y + rang_y) * 68) + 54)
             if active_tile[-1].collidepoint(board[x + rang_x][y + rang_y].pos):
@@ -45,94 +111,18 @@ def on_mouse_down(pos):
     global actor_pos
     global last_move_x
     global last_move_y
+    global active_tile
     if move_state is False:
-        for each in player1:
-            if each[0].collidepoint(pos):
-                if game_state == 2:
-                    if each[1].action_taken < each[1].action_value:
-                        for x in range(board_x):
-                            for y in range(board_y):
-                                # storing actor position
-                                actor_pos = each[0].pos
-
-                                if each[0].collidepoint(board[x][y].pos):
-                                    for rang in range(1, each[1].movement_value + 1):
-                                        last_move_x = x
-                                        last_move_y = y
-                                        print(x, y)
-
-                                        move_scan(x, y, rang, 0, board_occupied)
-                                        move_scan(x, y, -rang, 0, board_occupied)
-                                        move_scan(x, y, 0, rang, board_occupied)
-                                        move_scan(x, y, 0, -rang, board_occupied)
-                                        move_scan(x, y, rang, rang, board_occupied)
-                                        move_scan(x, y, rang, -rang, board_occupied)
-                                        move_scan(x, y, -rang, rang, board_occupied)
-                                        move_scan(x, y, -rang, -rang, board_occupied)
-
-                                        move_scan(x, y, rang, 1, board_occupied)
-                                        move_scan(x, y, -rang, 1, board_occupied)
-                                        move_scan(x, y, rang, -1, board_occupied)
-                                        move_scan(x, y, -rang, -1, board_occupied)
-
-                                        move_scan(x, y, 1, rang, board_occupied)
-                                        move_scan(x, y, 1, -rang, board_occupied)
-                                        move_scan(x, y, -1, rang, board_occupied)
-                                        move_scan(x, y, -1, -rang, board_occupied)
-
-        for each in player2:
-            if each[0].collidepoint(pos):
-                if game_state == 3:
-                    if each[1].action_taken < each[1].action_value:
-                        for x in range(board_x):
-                            for y in range(board_y):
-                                # storing actor position
-                                actor_pos = each[0].pos
-                                last_move_x = x
-                                last_move_y = y
-                                print(x, y)
-
-                                if each[0].collidepoint(board[x][y].pos):
-                                    for rang in range(1, each[1].movement_value + 1):
-
-                                        move_scan(x, y, rang, 0)
-                                        move_scan(x, y, -rang, 0)
-                                        move_scan(x, y, 0, rang)
-                                        move_scan(x, y, 0, -rang)
-                                        move_scan(x, y, rang, rang)
-                                        move_scan(x, y, rang, -rang)
-                                        move_scan(x, y, -rang, rang)
-                                        move_scan(x, y, -rang, -rang)
-
-                                        move_scan(x, y, rang, 1)
-                                        move_scan(x, y, -rang, 1)
-                                        move_scan(x, y, rang, -1)
-                                        move_scan(x, y, -rang, -1)
-
-                                        move_scan(x, y, 1, rang)
-                                        move_scan(x, y, 1, -rang)
-                                        move_scan(x, y, -1, rang)
-                                        move_scan(x, y, -1, -rang)
-
+        if game_state == 2:
+            start_movement(player1, pos)
+        elif game_state == 3:
+            start_movement(player2, pos)
     else:
-        global active_tile
-        for item in active_tile:
-            if item.collidepoint(pos):
-                if game_state == 2:
-                    for token in player1:
-                        if token[0].pos == actor_pos:
-                            board_occupied[last_move_x][last_move_y] = 0
-                            token[0].pos = item.pos
-                            for x in range(board_x):
-                                for y in range(board_y):
-                                    if item.collidepoint(board[x][y].pos):
-                                        board_occupied[x][y] = 1
+        if game_state == 2:
+            end_movement(player1, pos)
+        elif game_state == 3:
+            end_movement(player2, pos)
 
-        for item in active_tile:
-            for x in range(board_x):
-                for y in range(board_y):
-                    if item.collidepoint(board[x][y].pos):
-                        un_move_scan(item.pos, x, y)
         active_tile = []
 
 
