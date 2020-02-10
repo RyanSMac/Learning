@@ -14,33 +14,51 @@ actor_pos = 0
 last_move_x = 0
 last_move_y = 0
 
-
+# Active tiles for scanning
 active_tile = []
 
 
+# A function to determine if a click token can be moved,
+# and how far they are able to move
 def start_movement(player, pos):
+    # Declares global variables for function,
+    # and resets functions lock state
     global actor_pos
     global last_move_x
     global last_move_y
     lock_state = False
 
+    # Loops though player tokens
     for each in player:
+        # Check if this token is locked and it has actions left
         if each[1].locked is True and each[1].action_taken != 0:
+            # Change the functions lock state to stop any other token from being activated
             lock_state = True
+            # Check if this token collides with the mouse click
             if each[0].collidepoint(pos):
 
+                # check number of actions is equal to or less than total action,
+                # but more than zero actions
                 if each[1].action_value >= each[1].action_taken > 0:
+                    # Loop though the boards x axis
                     for x in range(board_x):
+                        # Loop though the board y axis
                         for y in range(board_y):
-                            # storing actor position
+
+                            # After check to make sure right token is selected,
+                            # store the active tokens actor position
                             actor_pos = each[0].pos
 
+                            # Check which board tile this token collides with
                             if each[0].collidepoint(board[x][y].pos):
+                                # Loop though this tokens move range
                                 for rang in range(1, each[1].movement_value + 1):
+                                    # Store this tokens current position
                                     last_move_x = x
                                     last_move_y = y
-                                    print(x, y)
+                                    print(x, y)  # Debug: print this tokens current position
 
+                                    # Scan and show all moves possible for selected token
                                     move_scan(x, y, rang, 0)
                                     move_scan(x, y, -rang, 0)
                                     move_scan(x, y, 0, rang)
@@ -204,13 +222,13 @@ def on_mouse_down(pos):
         active_tile = []
 
 
-WIDTH = 720
+WIDTH = 1280
 HEIGHT = 720
 
 TITLE = "Star Wars Legion Lite"
 
-board_x = 10
-board_y = 10
+board_x = 9
+board_y = 9
 
 board = [[0] * board_x for i in range(board_y)]
 board_occupied = [[0] * board_x for i in range(board_y)]
@@ -220,19 +238,19 @@ Board.white_board(board, board_x, board_y)
 player1 = Units.set_up_rebel()
 player2 = Units.set_up_imperial()
 
-player1[0][0].pos = board[2][0].pos
-board_occupied[2][0] = 1
+player1[0][0].pos = board[1][0].pos
+board_occupied[1][0] = 1
 player1[1][0].pos = board[7][0].pos
-board_occupied[4][0] = 1
-player1[2][0].pos = board[4][0].pos
 board_occupied[7][0] = 1
+player1[2][0].pos = board[4][0].pos
+board_occupied[4][0] = 1
 
-player2[0][0].pos = board[2][9].pos
-board_occupied[2][9] = 1
-player2[1][0].pos = board[7][9].pos
-board_occupied[4][9] = 1
-player2[2][0].pos = board[5][9].pos
-board_occupied[7][9] = 1
+player2[0][0].pos = board[1][8].pos
+board_occupied[1][8] = 1
+player2[1][0].pos = board[7][8].pos
+board_occupied[7][8] = 1
+player2[2][0].pos = board[4][8].pos
+board_occupied[4][8] = 1
 
 
 def draw():
