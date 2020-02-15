@@ -138,62 +138,88 @@ def end_movement(player, pos):
     global game_state
     swap_turn = False
 
-    # Loop though all tiles
+    # Loop though all active tiles
     for item in active_tile:
+        # Check mouse pos collides with an active tile
         if item.collidepoint(pos):
+            # Loop though all token in current players turn
             for token in player:
+                # Check token matches active actor pos
                 if token[0].pos == actor_pos:
+                    # Update board occupation,
+                    # remove token from current pos
                     board_occupied[last_move_x][last_move_y] = 0
+                    # Move active token to clicked tile
                     token[0].pos = item.pos
+                    # Loop though x axis
                     for x in range(board_x):
+                        # Loop though y axis
                         for y in range(board_y):
+                            # Check which board tile was clicked on
                             if item.collidepoint(board[x][y].pos):
+                                # Update occupied space
                                 board_occupied[x][y] = 1
+                    # Set the lock state to true
                     token[1].locked = True
+                    # Decrease the number of action for this token by one
                     token[1].action_taken -= 1
+                    # Check if this token has used all its actions
                     if token[1].action_taken == 0:
+                        # Change the swap_turn state to true
                         swap_turn = True
+                        # Change the token lock state to False
                         token[1].locked = False
 
+    # Loop though all tiles in active tiles
     for item in active_tile:
+        # Loop though the boards x axis
         for x in range(board_x):
+            # Loop though boards y axis
             for y in range(board_y):
+                # Check if click collided with this tile
                 if item.collidepoint(board[x][y].pos):
+                    # Remove board scan from this pos
                     un_move_scan(item.pos, x, y)
 
+    # Check swap state and change game state if true
     if swap_turn is True:
         if game_state == 2:
             game_state = 3
         elif game_state == 3:
             game_state = 2
 
+    # Set reset value
     reset = True
+    # Loop though player 1 token
     for each in player1:
+        # Check if token has action left
         if each[1].action_taken > 0:
+            # Update reset
             reset = False
+    # Loop though player 2 token
     for each in player2:
+        # Check if token has action left
         if each[1].action_taken > 0:
+            # Update reset
             reset = False
 
+    # If all token have used all there moves reset the phase
     if reset is True:
+        # Loop though token in player 1
         for each in player1:
+            # Reset action value and unlock token
             each[1].action_taken = each[1].action_value
             each[1].locked = False
+        # Loop though token in player 2
         for each in player2:
+            # Reset action value and unlock token
             each[1].action_taken = each[1].action_value
             each[1].locked = False
-
-    print(str(player1[0][1].name) + "1" + "Moves Remaining: " + str(player1[0][1].action_taken) + "/" + str(player1[0][1].action_value))
-    print(str(player1[1][1].name) + "2" + "Moves Remaining: " + str(player1[1][1].action_taken) + "/" + str(player1[1][1].action_value))
-    print(str(player1[2][1].name) + "1" + "Moves Remaining: " + str(player1[2][1].action_taken) + "/" + str(player1[2][1].action_value))
-
-    print(str(player2[0][1].name) + "1" + "Moves Remaining: " + str(player2[0][1].action_taken) + "/" + str(player2[0][1].action_value))
-    print(str(player2[1][1].name) + "2" + "Moves Remaining: " + str(player2[1][1].action_taken) + "/" + str(player2[1][1].action_value))
-    print(str(player2[2][1].name) + "1" + "Moves Remaining: " + str(player2[2][1].action_taken) + "/" + str(player2[2][1].action_value))
 
 
 # Function to check range of movement and if there are any collisions
 def move_scan(x, y, rang_x, rang_y):
+    # Set global variables for function
     global board_occupied
     global move_state
     move_state = True
@@ -204,9 +230,12 @@ def move_scan(x, y, rang_x, rang_y):
             active_tile.append(board[x + rang_x][y + rang_y])
             # print(active_tile[-1]) Debug
 
+            # Change the last tile added to active tile list to green
             active_tile[-1] = Actor('move_square')
             active_tile[-1].pos = (((x + rang_x) * 68) + 54, ((y + rang_y) * 68) + 54)
+            # Check if this tile is on the board
             if active_tile[-1].collidepoint(board[x + rang_x][y + rang_y].pos):
+                # Update board with new tile
                 board[x + rang_x][y + rang_y] = active_tile[-1]
             else:
                 active_tile.pop()
