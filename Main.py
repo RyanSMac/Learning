@@ -243,23 +243,32 @@ def move_scan(x, y, rang_x, rang_y):
         print("")
 
 
+# Function to remove drawn movement area
 def un_move_scan(pos, x, y):
+    # Set global states for function
     global move_state
+    # reset move state to False
     move_state = False
 
+    # replace green tile with blank tile
     board[x][y] = Actor('blank_token')
     board[x][y].pos = pos
 
 
+# Function to determine what to do on a mouse click
 def on_mouse_down(pos):
+    # Set global variables
     global actor_pos
     global last_move_x
     global last_move_y
     global active_tile
     global move_state
 
+    # Check if there is a token selected
     if move_state is False:
+        # Check who's turn it is
         if game_state == 2:
+            # Start movement
             start_movement(player1, pos)
         elif game_state == 3:
             start_movement(player2, pos)
@@ -272,22 +281,29 @@ def on_mouse_down(pos):
         active_tile = []
 
 
+# Display size
 WIDTH = 1280
 HEIGHT = 720
 
+# Display title
 TITLE = "Star Wars Legion Lite"
 
+# The boards size
 board_x = 9
 board_y = 9
 
+# Generate the board and occupied board list
 board = [[0] * board_x for i in range(board_y)]
 board_occupied = [[0] * board_x for i in range(board_y)]
 
+# Asigns white tiles to all board spaces
 Board.white_board(board, board_x, board_y)
 
+# Builds armys for player 1 and 2
 player1 = Units.set_up_rebel()
 player2 = Units.set_up_imperial()
 
+# Places tokens on the board and occupies those spaces
 player1[0][0].pos = board[1][0].pos
 board_occupied[1][0] = 1
 player1[1][0].pos = board[7][0].pos
@@ -303,12 +319,17 @@ player2[2][0].pos = board[4][8].pos
 board_occupied[4][8] = 1
 
 
+# Funtion to draw to the screen
 def draw():
+    # Clear the screen
     screen.clear()
+    # Loop though board
     for row in range(board_x):
         for col in range(board_y):
+            # Draw each board tile
             board[row][col].draw()
 
+    # Draw all players tokens
     for each in player1:
         each[0].draw()
 
