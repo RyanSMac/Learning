@@ -34,99 +34,54 @@ def start_movement(player, pos):
         if each[1].locked is True and each[1].action_taken != 0:
             # Change the functions lock state to stop any other token from being activated
             lock_state = True
-            # Create function from here
-            # Check if this token collides with the mouse click
-            if each[0].collidepoint(pos):
 
-                # check number of actions is equal to or less than total action,
-                # but more than zero actions
-                if each[1].action_value >= each[1].action_taken > 0:
-                    # Loop though the boards x axis
-                    for x in range(board_x):
-                        # Loop though the board y axis
-                        for y in range(board_y):
-
-                            # After check to make sure right token is selected,
-                            # store the active tokens actor position
-                            actor_pos = each[0].pos
-
-                            # Check which board tile this token collides with
-                            if each[0].collidepoint(board[x][y].pos):
-                                # Loop though this tokens move range
-                                for rang in range(1, each[1].movement_value + 1):
-                                    # Store this tokens current position
-                                    last_move_x = x
-                                    last_move_y = y
-                                    print(x, y)  # Debug: print this tokens current position
-
-                                    # Scan and show all moves possible for selected token
-                                    move_scan(x, y, rang, 0)
-                                    move_scan(x, y, -rang, 0)
-                                    move_scan(x, y, 0, rang)
-                                    move_scan(x, y, 0, -rang)
-                                    move_scan(x, y, rang, rang)
-                                    move_scan(x, y, rang, -rang)
-                                    move_scan(x, y, -rang, rang)
-                                    move_scan(x, y, -rang, -rang)
-
-                                    move_scan(x, y, rang, 1)
-                                    move_scan(x, y, -rang, 1)
-                                    move_scan(x, y, rang, -1)
-                                    move_scan(x, y, -rang, -1)
-
-                                    move_scan(x, y, 1, rang)
-                                    move_scan(x, y, 1, -rang)
-                                    move_scan(x, y, -1, rang)
-                                    move_scan(x, y, -1, -rang)
+            movement_check(pos, each)
 
     # Check if there is no locked tokens
     if lock_state is False:
         # Loops though player tokens
         for each in player:
-            # Create function from here!
-            # Check if this token collides with the mouse click
-            if each[0].collidepoint(pos):
 
-                # check number of actions is equal to or less than total action,
-                # but more than zero actions
-                if each[1].action_value >= each[1].action_taken > 0:
-                    # Loop though the boards x axis
-                    for x in range(board_x):
-                        # Loop though the board y axis
-                        for y in range(board_y):
+            movement_check(pos, each)
 
-                            # After checks to make sure right token is selected,
-                            # store the active tokens actor position
-                            actor_pos = each[0].pos
 
-                            # Check which board tile this token collides with
-                            if each[0].collidepoint(board[x][y].pos):
-                                # Loop though this tokens move range
-                                for rang in range(1, each[1].movement_value + 1):
-                                    # Store this tokens current position
-                                    last_move_x = x
-                                    last_move_y = y
-                                    print(x, y) # Debug: print this tokens current position
+def movement_check(pos, each):
+    global actor_pos
+    global last_move_x
+    global last_move_y
 
-                                    # Scan and show all moves possible for selected token
-                                    move_scan(x, y, rang, 0)
-                                    move_scan(x, y, -rang, 0)
-                                    move_scan(x, y, 0, rang)
-                                    move_scan(x, y, 0, -rang)
-                                    move_scan(x, y, rang, rang)
-                                    move_scan(x, y, rang, -rang)
-                                    move_scan(x, y, -rang, rang)
-                                    move_scan(x, y, -rang, -rang)
+    # Create function from here
+    # Check if this token collides with the mouse click
+    if each[0].collidepoint(pos):
 
-                                    move_scan(x, y, rang, 1)
-                                    move_scan(x, y, -rang, 1)
-                                    move_scan(x, y, rang, -1)
-                                    move_scan(x, y, -rang, -1)
+        # check number of actions is equal to or less than total action,
+        # but more than zero actions
+        if each[1].action_value >= each[1].action_taken > 0:
+            # Loop though the boards x axis
+            for x in range(board_x):
+                # Loop though the board y axis
+                for y in range(board_y):
 
-                                    move_scan(x, y, 1, rang)
-                                    move_scan(x, y, 1, -rang)
-                                    move_scan(x, y, -1, rang)
-                                    move_scan(x, y, -1, -rang)
+                    # After check to make sure right token is selected,
+                    # store the active tokens actor position
+                    actor_pos = each[0].pos
+
+                    # Check which board tile this token collides with
+                    if each[0].collidepoint(board[x][y].pos):
+                        # Loop though this tokens move range
+
+                        last_move_x = x
+                        last_move_y = y
+
+                        scan_x = each[1].movement_value
+                        scan_range = each[1].movement_value * 2 + 1
+
+                        for row in range(scan_range):
+                            scan_y = each[1].movement_value
+                            for col in range(scan_range):
+                                move_scan(x, y, scan_x, scan_y)
+                                scan_y -= 1
+                            scan_x -= 1
 
 
 # A function to check if a valid move has been made,
