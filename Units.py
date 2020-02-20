@@ -1,5 +1,6 @@
 # A file for defining units
 from pgzero.builtins import Actor
+import Weapons
 
 
 class Unit:
@@ -18,13 +19,12 @@ class Unit:
         self.locked = locked
 
 
-stormtrooper1 = Unit("Stormtrooper", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
-stormtrooper2 = Unit("Stormtrooper", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
-vader = Unit("Vader", 5, 0, 1, 1, 2, 50, 0, 2, 2, False)
-
-rebel_trooper1 = Unit("Rebel Squad", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
-rebel_trooper2 = Unit("Rebel Squad", 1, 1, 2, 5, 0, 50, 0, 2, 2, False)
-luke_skywalker = Unit("Luke Skywalker", 5, 0, 2, 1, 2, 50, 0, 2, 2, False)
+stormtrooper1 = Unit("Stormtrooper", 1, Weapons.st_blaster, 2, 5, 0, 50, 0, 2, 2, False)
+stormtrooper2 = Unit("Stormtrooper", 1, Weapons.st_blaster, 2, 5, 0, 50, 0, 2, 2, False)
+vader = Unit("Vader", 5, Weapons.vader_lightsaber, 1, 1, 1, 50, 0, 2, 2, False)
+rebel_trooper1 = Unit("Rebel Squad", 1, Weapons.rs_blaster, 2, 5, 0, 50, 0, 2, 2, False)
+rebel_trooper2 = Unit("Rebel Squad", 1, Weapons.rs_blaster, 2, 5, 0, 50, 0, 2, 2, False)
+luke_skywalker = Unit("Luke Skywalker", 5, Weapons.luke_lightsaber, 2, 1, 1, 50, 0, 2, 2, False)
 
 
 def set_up_rebel():
