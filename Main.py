@@ -6,6 +6,7 @@ from pgzero.builtins import *
 import Board
 import Units
 import Dice
+import Update
 
 # Game states and global variables
 # 0 menu, 1 game over, 2 player1, 3 player2
@@ -348,40 +349,56 @@ def end_turn(swap_turn):
     global player1
     global player2
 
-    # Check swap state and change game state if true
-    if swap_turn is True:
+    any_token = False
+
+    if Update.end_game(player1, player2) is True:
+        game_state = 1
+
+    if game_state != 1:
         if game_state == 2:
-            game_state = 3
-        elif game_state == 3:
-            game_state = 2
+            for each in player2:
+                if each[1].action_taken > 0:
+                    any_token = True
 
-    # Set reset value
-    reset = True
-    # Loop though player 1 token
-    for each in player1:
-        # Check if token has action left
-        if each[1].action_taken > 0:
-            # Update reset
-            reset = False
-    # Loop though player 2 token
-    for each in player2:
-        # Check if token has action left
-        if each[1].action_taken > 0:
-            # Update reset
-            reset = False
+        if game_state == 3:
+            for each in player1:
+                if each[1].action_taken > 0:
+                    any_token = True
 
-    # If all token have used all there moves reset the phase
-    if reset is True:
-        # Loop though token in player 1
+        # Check swap state and change game state if true
+        if swap_turn is True and any_token is True:
+            if game_state == 2:
+                game_state = 3
+            elif game_state == 3:
+                game_state = 2
+
+        # Set reset value
+        reset = True
+        # Loop though player 1 token
         for each in player1:
-            # Reset action value and unlock token
-            each[1].action_taken = each[1].action_value
-            each[1].locked = False
-        # Loop though token in player 2
+            # Check if token has action left
+            if each[1].action_taken > 0:
+                # Update reset
+                reset = False
+        # Loop though player 2 token
         for each in player2:
-            # Reset action value and unlock token
-            each[1].action_taken = each[1].action_value
-            each[1].locked = False
+            # Check if token has action left
+            if each[1].action_taken > 0:
+                # Update reset
+                reset = False
+
+        # If all token have used all there moves reset the phase
+        if reset is True:
+            # Loop though token in player 1
+            for each in player1:
+                # Reset action value and unlock token
+                each[1].action_taken = each[1].action_value
+                each[1].locked = False
+            # Loop though token in player 2
+            for each in player2:
+                # Reset action value and unlock token
+                each[1].action_taken = each[1].action_value
+                each[1].locked = False
 
 
 # Function to determine what to do on a mouse click
@@ -468,6 +485,11 @@ def draw():
 
     for each in player2:
         each[0].draw()
+
+    if game_state == 1:
+        screen.clear()
+        screen.fill((0, 0, 0))
+        screen.draw.text("Game Over", ((board_x / 2), (board_y / 2)), fontsize=100)
 
 
 pgzrun.go()

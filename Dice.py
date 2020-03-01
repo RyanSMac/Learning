@@ -51,7 +51,7 @@ def roll_black_def_dice(x):
     hit = 0
 
     for dice in range(x):
-        if roll(5) > 2:
+        if roll(5) > 3:
             hit += 1
 
     return hit
@@ -61,7 +61,7 @@ def roll_red_def_dice(x):
     hit = 0
 
     for dice in range(x):
-        if roll(5) > 1:
+        if roll(5) > 3:
             hit += 1
 
     return hit
